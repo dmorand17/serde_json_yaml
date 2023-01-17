@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# The image name
+IMAGE_NAME={IMAGE_NAME:="serde-json-yaml"}
+
+# The file to be converted
+file=$1
+
+# Check if the file and conversion type arguments are provided
+if [[ -z "$file" ]]; then
+  echo "Please provide the file to be converted"
+  exit 1
+fi
+
+# Run the container with the specified file and conversion type as arguments
+docker run --rm -v "$(pwd)":/app "$IMAGE_NAME" $file -t yaml2json
+
+if [ $? -eq 0 ]; then
+  echo "Conversion successful!"
+else
+  echo "Conversion failed."
+  exit 1
+fi

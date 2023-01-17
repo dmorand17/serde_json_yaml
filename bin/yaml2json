@@ -1,0 +1,35 @@
+#!/bin/bash
+
+# The path to the python script
+SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
+PARENT_DIR="$(dirname ${SCRIPT_DIR})"
+
+if [[ ! -d "${PARENT_DIR}/.venv" ]] ; then
+  echo "Setting up venv... This is only required on fresh clones."
+  python3 -m venv --system-site-packages .venv/
+fi
+
+source ${PARENT_DIR}/.venv/bin/activate
+pip install -r ${PARENT_DIR}/requirements.txt &>/dev/null
+
+SCRIPT_PATH="${PARENT_DIR}/serde_json_yaml.py"
+
+# The file to be converted
+file=$1
+
+# Check if the file argument is provided
+if [[ -z "$file" ]]; then
+  echo "Please provide the json file to be converted as argument."
+  exit 1
+fi
+
+# Execute the python script
+python3 $SCRIPT_PATH $file -t yaml2json
+
+# echo
+# if [ $? -eq 0 ]; then
+#   echo "[ok]  Conversion successful!"
+# else
+#   echo "[!]  Conversion failed."
+#   exit 1
+# fi
